@@ -12,12 +12,13 @@ and REST best practices.
 - [x] Add centralized error handling
 - [ ] Add unit tests for routes
 - [ ] Improve database-level constraints
+- [ ] Add users table 
+- [ ] Add user authentication
 
 ## Design Considerations
 
 Some current design decisions are intentional tradeoffs to keep the code readable
 while learning:
-- DB models are temporarily reused as input schemas
 - Certain endpoints prioritize clarity over pure REST style
 
 These will be refactored incrementally.

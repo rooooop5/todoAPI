@@ -9,7 +9,7 @@ from datetime import date
 tasks_router = APIRouter(prefix='/tasks', tags=['tasks'])
 
 #------GET endpoint------
-@tasks_router.get('/',response_model=TaskResponse)
+@tasks_router.get('/',response_model=list[TaskResponse])
 def get_tasks(status:Status=Query(default=None), priority:Priority=Query(default=None), session: Session = Depends(get_session)):
     query=select(Task)
     if status is not None:
@@ -21,7 +21,7 @@ def get_tasks(status:Status=Query(default=None), priority:Priority=Query(default
 
 
 #------GET by due date------
-@tasks_router.get('/due',response_model=TaskResponse)
+@tasks_router.get('/due',response_model=list[TaskResponse])
 def get_by_due_date(due_date:date|None=Query(default=None),session:Session=Depends(get_session)):
     if not due_date:
         db_tasks=session.exec(select(Task)).all()
@@ -31,7 +31,7 @@ def get_by_due_date(due_date:date|None=Query(default=None),session:Session=Depen
 
 
 #------GET by due date------
-@tasks_router.get('/overdue',response_model=TaskResponse)
+@tasks_router.get('/overdue',response_model=list[TaskResponse])
 def get_overdue_tasks(session:Session=Depends(get_session)):
     db_tasks=session.exec(select(Task).where(Task.due_date.is_not(None),Task.due_date<date.today(),Task.status==Status.PENDING)).all()
     return db_tasks
