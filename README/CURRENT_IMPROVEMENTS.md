@@ -9,7 +9,7 @@ and REST best practices.
 - [ ] Refine filtering logic using dynamic query building
 - [ ] Improve REST consistency for filtering endpoints
 - [ ] Add pagination and sorting
-- [✅] Improve HTTP status code usage
+- [x] Improve HTTP status code usage
 - [ ] Add centralized error handling
 - [ ] Add unit tests for routes
 - [ ] Improve database-level constraints
