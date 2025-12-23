@@ -16,10 +16,29 @@ class Priority(Enum):
     HIGH = "HIGH"
     CRITICAL = "CRITICAL"
 
-class Task(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+
+class TaskBase(SQLModel):
     title: str
     description: str
-    due_date: date|None=Field(default=None)
+    due_date: date|None=None
     status: Status
     priority: Priority
+
+
+class Task(TaskBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
+
+class TaskResponse(TaskBase):
+    id:int
+
+class TaskCreate(TaskBase):
+    pass
+
+
+class TaskPatch(SQLModel):
+    title: str|None=None
+    description: str|None=None
+    due_date: date|None=None
+    status: Status|None=None
+    priority: Priority|None=None
