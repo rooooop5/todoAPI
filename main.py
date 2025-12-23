@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException,Request
+from fastapi.responses import JSONResponse
 from app.router import tasks
 from app.core.database import _init_table
 
@@ -12,6 +13,22 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
+@app.exception_handler(HTTPException)
+def handler(request:Request,exception:HTTPException):
+    return JSONResponse(
+        status_code=exception.status_code,
+        content={
+            "error":{
+                "status_code":exception.status_code,
+                "message":exception.detail,
+                "path":request.url.path
+                }
+            }
+    )
+
+
 
 
 @app.get('/')
