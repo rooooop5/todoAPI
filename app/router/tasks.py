@@ -33,13 +33,14 @@ def get_by_due_date(due_date:date|None=Query(default=None),session:Session=Depen
 #------GET by due date------
 @tasks_router.get('/overdue')
 def get_overdue_tasks(session:Session=Depends(get_session)):
-    db_tasks=session.exec(select(Task).where(Task.due_date.is_not(None))).all()
-    overdue_tasks=[]
-    for task in db_tasks:
-        if task.due_date<date.today():
-            if task.status==Status.PENDING:
-                overdue_tasks.append(task)
-    return overdue_tasks
+    db_tasks=session.exec(select(Task).where(Task.due_date.is_not(None),Task.due_date<date.today(),Task.status==Status.PENDING)).all()
+    # overdue_tasks=[]
+    # for task in db_tasks:
+    #     if task.due_date<date.today():
+    #         if task.status==Status.PENDING:
+    #             overdue_tasks.append(task)
+    #return overdue_tasks
+    return db_tasks
 
 
 #------GET by ID endpoint------
