@@ -10,7 +10,7 @@ and REST best practices.
 - [ ] Improve REST consistency for filtering endpoints
 - [ ] Add pagination and sorting
 - [x] Improve HTTP status code usage
-- [ ] Add centralized error handling
+- [x] Add centralized error handling
 - [ ] Add unit tests for routes
 - [ ] Improve database-level constraints
 
