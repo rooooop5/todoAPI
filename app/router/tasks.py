@@ -39,8 +39,6 @@ def get_overdue_tasks(session:Session=Depends(get_session)):
         if task.due_date<date.today():
             if task.status==Status.PENDING:
                 overdue_tasks.append(task)
-    if not overdue_tasks:
-        return {"message":"There are no overdue tasks."}
     return overdue_tasks
 
 
