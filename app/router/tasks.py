@@ -14,7 +14,7 @@ def get_tasks(status:Status=Query(default=None), priority:Priority=Query(default
     query=select(Task)
     if status is not None:
         query=query.where(Task.status==status)
-    if status is not None:
+    if priority is not None:
         query=query.where(Task.priority==priority)
     db_tasks=session.exec(query).all()
     return db_tasks
@@ -57,13 +57,6 @@ def get_tasks_by_id(task_id:int, session: Session = Depends(get_session)):
 #------POST endpoint------
 @tasks_router.post('/')
 def create_tasks(task: Task, session: Session = Depends(get_session)):
-    task = Task(
-        title=task.title,
-        description=task.description,
-        due_date=task.due_date,
-        status=task.status,
-        priority=task.priority,
-    )
     session.add(task)
     session.commit()
     session.refresh(task)
