@@ -21,7 +21,7 @@ def get_tasks(status:Status=Query(default=None), priority:Priority=Query(default
 
 
 #------GET by due date------
-@tasks_router.get('/due',response_class=TaskResponse)
+@tasks_router.get('/due',response_model=TaskResponse)
 def get_by_due_date(due_date:date|None=Query(default=None),session:Session=Depends(get_session)):
     if not due_date:
         db_tasks=session.exec(select(Task)).all()
@@ -52,10 +52,11 @@ def get_tasks_by_id(task_id:int, session: Session = Depends(get_session)):
 #------POST endpoint------
 @tasks_router.post('/',response_model=TaskResponse)
 def create_tasks(task: TaskCreate, session: Session = Depends(get_session)):
-    session.add(task)
+    db_task=Task(**task.model_dump())
+    session.add(db_task)
     session.commit()
-    session.refresh(task)
-    return task
+    session.refresh(db_task)
+    return db_task
 
 
 #------PUT endpoint------

@@ -5,9 +5,8 @@ and REST best practices.
 
 ## Planned Improvements
 
-- [ ] Separate request/response schemas from database models
+- [x] Separate request/response schemas from database models
 - [ ] Refine filtering logic using dynamic query building
-- [ ] Improve REST consistency for filtering endpoints
 - [ ] Add pagination and sorting
 - [x] Improve HTTP status code usage
 - [x] Add centralized error handling
