@@ -1,6 +1,10 @@
 from sqlmodel import SQLModel, Field,Relationship
 from datetime import date
 from enum import Enum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .user_models import User
 
 
 # ------creating a class by inheriting Enum to for storing status of tasks------
@@ -28,7 +32,7 @@ class TaskBase(SQLModel):
 
 class Task(TaskBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    owner:"User"=Relationship(back_populates="tasks")
+    owner:User=Relationship(back_populates="tasks")
 
 
 class TaskResponse(TaskBase):
