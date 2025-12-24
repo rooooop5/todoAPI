@@ -9,3 +9,6 @@ class UserBase(SQLModel):
 class User(UserBase,table=True):
     id:int|None=Field(default=None,primary_key=True)
     tasks:Optional[list["Task"]]=Relationship(back_populates="owner")
+
+class UserCreate(UserBase):
+    pass
