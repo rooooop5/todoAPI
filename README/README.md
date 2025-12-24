@@ -17,6 +17,21 @@ This project is a learning-focused backend API exploring:
 ## Status
 🚧 Actively evolving — see CURRENT_IMPROVEMENTS.md
 
+## Planned Extension/Follow-up project
+Authentication and authorization are intentionally out of scope for this repository.
+
+This project focuses on core REST API design, data modeling, and clean separation of concerns.
+
+A follow-up project will extend this API with:
+
+- JWT-based authentication
+
+- Role-based access control
+
+- Secure task ownership enforcement
+
+The authenticated version will be developed as a downstream project in a separate repository to keep concerns isolated.
+
 ## Run Locally
 ```bash
 git clone <repo-url>
