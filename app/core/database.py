@@ -1,4 +1,6 @@
 from sqlmodel import SQLModel, Session, create_engine
+from app.models.task_models import Task
+from app.models.user_models import User
 
 # -------the database url--------
 url = 'postgresql+psycopg://saswatam@localhost:5432/tasks'

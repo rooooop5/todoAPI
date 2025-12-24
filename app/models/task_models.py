@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field,Relationship
 from datetime import date
 from enum import Enum
 
@@ -23,10 +23,12 @@ class TaskBase(SQLModel):
     due_date: date|None=None
     status: Status
     priority: Priority
+    user_id:int=Field(foreign_key="user.id")
 
 
 class Task(TaskBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    owner:"User"=Relationship(back_populates="tasks")
 
 
 class TaskResponse(TaskBase):
