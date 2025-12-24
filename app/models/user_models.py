@@ -6,7 +6,6 @@ if TYPE_CHECKING:
 class UserBase(SQLModel):
     username:str=Field(index=True,unique=True)
     email:str=Field(index=True,unique=True)
-    hashed_passwd:str
 
 class User(UserBase,table=True):
     id:int|None=Field(default=None,primary_key=True)
@@ -19,4 +18,7 @@ class UserResponse(SQLModel):
     id:int
     username:str
     email:str
-    hashed_passwd:str
+
+class UserPatch(SQLModel):
+    username:str|None=None
+    email:str|None=None
