@@ -16,12 +16,16 @@ def get_users(session:Session=Depends(get_session)):
 @users_router.get("/{user_id}",response_model=UserResponse)
 def get_user(user_id:int,session:Session=Depends(get_session)):
     db_user=session.get(User,user_id)
+    if not db_user:
+        raise HTTPException(status_code=404,detail="404 ERROR : Task not found.")
     return db_user
 
 
 @users_router.get("/{user_id}/tasks",response_model=list[TaskResponse])
 def get_user_tasks(user_id:int,session:Session=Depends(get_session)):
     db_user=session.get(User,user_id)
+    if not db_user:
+        raise HTTPException(status_code=404,detail="404 ERROR : Task not found.")
     user_tasks=db_user.tasks
     return user_tasks
 
@@ -36,6 +40,8 @@ def create_user(user:UserCreate,session:Session=Depends(get_session)):
 @users_router.put("/{user_id}",response_model=UserResponse)
 def put_user(user:UserCreate,user_id:int,session:Session=Depends(get_session)):
     db_user=session.get(User,user_id)
+    if not db_user:
+        raise HTTPException(status_code=404,detail="404 ERROR : Task not found.")
     user_data=user.model_dump(exclude={"id"})
     db_user.sqlmodel_update(user_data)
     session.add(db_user)
@@ -47,6 +53,8 @@ def put_user(user:UserCreate,user_id:int,session:Session=Depends(get_session)):
 @users_router.patch("/{user_id}",response_model=UserResponse)
 def patch_user(user:UserPatch,user_id:int,session:Session=Depends(get_session)):
     db_user=session.get(User,user_id)
+    if not db_user:
+        raise HTTPException(status_code=404,detail="404 ERROR : Task not found.")
     user_data=user.model_dump(exclude_unset=True)
     db_user.sqlmodel_update(user_data)
     session.add(db_user)
@@ -57,6 +65,8 @@ def patch_user(user:UserPatch,user_id:int,session:Session=Depends(get_session)):
 @users_router.delete("/{user_id}")
 def delete_user(user_id:int,session:Session=Depends(get_session)):
     db_user=session.get(User,user_id)
+    if not db_user:
+        raise HTTPException(status_code=404,detail="404 ERROR : Task not found.")
     if db_user.tasks:
         raise HTTPException(status_code=409,detail="409 ERROR : User has existing tasks,cannot delete.")
     session.delete(db_user)
