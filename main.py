@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI,HTTPException,Request
 from fastapi.responses import JSONResponse
-from app.router import tasks,users
+from app.router import tasks,users,auth
 from app.core.database import _init_table
 
 
@@ -35,6 +35,7 @@ def handler(request:Request,exception:HTTPException):
 def home():
     return {'Message': 'This is a Todo Application.'}
 
+app.include_router(auth.auth_router)
 app.include_router(users.users_router)
 app.include_router(tasks.tasks_router)
 
