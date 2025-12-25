@@ -6,8 +6,14 @@ from app.core.security import encrypt_password,verify_password
 from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
 
 
+
+
 auth_router=APIRouter(prefix="/auth",tags=["auth"])
 oauth2_scheme=OAuth2PasswordBearer(tokenUrl="login")
+def get_user(token=Depends(oauth2_scheme),session:Session=Depends(get_session)):
+    db_user=session.get(User,int(token))
+    return db_user
+
 
 @auth_router.get("/")
 def default():
@@ -30,4 +36,8 @@ def login(login_req:OAuth2PasswordRequestForm=Depends(),session:Session=Depends(
     db_user.password
     if not verify_password(login_req.password,db_user.password):
         raise HTTPException(status_code=401,detail="Unauthorized access.")
-    return {"access_token":db_user.username,"token_type":"bearer"}
+    return {"access_token":db_user.id,"token_type":"bearer"}
+
+@auth_router.get("/users/me",response_model=UserResponse)
+def me(user=Depends(get_user)):
+    return user
