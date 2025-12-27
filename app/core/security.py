@@ -10,7 +10,7 @@ from pydantic import BaseModel
 #openssl rand -hex 32
 SECRET_KEY="ae429b2ec5e5eb0c7b1d4f9e6aed8aa9e302892145ebf6bc41f16e82d70aa38a"
 ALGORITHM="HS256"
-ACCESS_TOEKEN_EXPERATION_MINS=25
+DEFAULT_ACCESS_TOKEN_EXPIRATION_MINS=25
 
 
 #-----Token and its model------
@@ -20,13 +20,12 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username:str|None=None
-#-----helper function for creating token------
-def create_access_token(data:dict,expires_delta=timedelta|None):
+
+
+#------helper function for creating token------
+def create_access_token(data:dict):
     to_encode=data.copy()
-    if expires_delta:
-        expires=datetime.now(timezone.utc)+expires_delta
-    else:
-        expires=datetime.now(timezone.utc)+timedelta(minutes=15)
+    expires=datetime.now(timezone.utc)+timedelta(minutes=DEFAULT_ACCESS_TOKEN_EXPIRATION_MINS)
     to_encode.update({"exp":expires})
     encoded_jwt=jwt.encode(to_encode,SECRET_KEY,ALGORITHM)
     return encoded_jwt

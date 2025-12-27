@@ -2,7 +2,7 @@ from fastapi import APIRouter,Depends,HTTPException
 from sqlmodel import Session,select
 from app.core.database import get_session
 from app.models.user_models import User,UserCreate,UserResponse
-from app.core.security import encrypt_password,verify_password,SECRET_KEY,ALGORITHM,ACCESS_TOEKEN_EXPERATION_MINS,Token,TokenData,create_access_token
+from app.core.security import encrypt_password,verify_password,SECRET_KEY,ALGORITHM,Token,TokenData,create_access_token
 from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
 import jwt
 from jwt.exceptions import InvalidTokenError
@@ -12,7 +12,7 @@ from datetime import timedelta
 
 auth_router=APIRouter(prefix="/auth",tags=["auth"])
 oauth2_scheme=OAuth2PasswordBearer(tokenUrl="/auth/token")
-def get_user(token=Depends(oauth2_scheme),session:Session=Depends(get_session)):
+def authenticate_user(token=Depends(oauth2_scheme),session:Session=Depends(get_session)):
     credentials_exception=HTTPException(status_code=401,detail="Cannot authorize user.")
     try:
         payload=jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
@@ -51,10 +51,9 @@ def login(login_req:OAuth2PasswordRequestForm=Depends(),session:Session=Depends(
         raise HTTPException(status_code=401,detail="Unauthorized access.")
     if not verify_password(login_req.password,db_user.password):
         raise HTTPException(status_code=401,detail="Unauthorized access.")
-    expiry_period=timedelta(minutes=ACCESS_TOEKEN_EXPERATION_MINS)
-    access_token=create_access_token(data={"sub":db_user.username},expires_delta=expiry_period)
+    access_token=create_access_token(data={"sub":db_user.username})
     return Token(access_token=access_token,token_type="bearer")
 
 @auth_router.get("/users/me",response_model=UserResponse)
-def me(user=Depends(get_user)):
+def me(user=Depends(authenticate_user)):
     return user
