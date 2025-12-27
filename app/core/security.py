@@ -1,7 +1,38 @@
 from passlib.context import CryptContext
-from fastapi import APIRouter
-from fastapi.security import OAuth2PasswordBearer
+import jwt
+from jwt.exceptions import InvalidTokenError
+from datetime import datetime,timedelta,timezone
+from pydantic import BaseModel
 
+
+#-----declaring secret key and algorithm and creating a default expiration time-----
+#-----used the following cmd to generate secret key------
+#openssl rand -hex 32
+SECRET_KEY="ae429b2ec5e5eb0c7b1d4f9e6aed8aa9e302892145ebf6bc41f16e82d70aa38a"
+ALGORITHM="HS256"
+ACCESS_TOEKEN_EXPERATION_MINS=25
+
+
+#-----Token and its model------
+class Token(BaseModel):
+    access_token:str
+    token_type:str
+
+class TokenData(BaseModel):
+    username:str|None=None
+#-----helper function for creating token------
+def create_access_token(data:dict,expires_delta=timedelta|None):
+    to_encode=data.copy()
+    if expires_delta:
+        expires=datetime.now(timezone.utc)+expires_delta
+    else:
+        expires=datetime.now(timezone.utc)+timedelta(minutes=15)
+    to_encode.update({"exp":expires})
+    encoded_jwt=jwt.encode(to_encode,SECRET_KEY,ALGORITHM)
+    return encoded_jwt
+
+
+#------Password hashing and verification using context manager------
 crypt_context=CryptContext(schemes=['bcrypt'],deprecated='auto')
 
 def encrypt_password(password:str):
